@@ -1,7 +1,7 @@
 <script setup>
-import Accueil from './views/Accueil.vue'
+
 </script>
 
 <template>
-  <Accueil />
+  <router-view></router-view>
 </template>

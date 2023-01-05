@@ -13,21 +13,16 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const pseudo = ref()
 let isHidden = ref(true)
 
 function newSalon(){
     if (!pseudo.value){
-        console.log('renseigner')
         isHidden.value = false
     } else {
-        console.log(pseudo.value)
+        localStorage.setItem("pseudo", pseudo.value)
     }
 }
-
-onMounted(() =>{
-    console.log(pseudo)
-})
 </script>
