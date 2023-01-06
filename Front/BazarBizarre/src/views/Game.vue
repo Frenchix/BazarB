@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
+import Plateau from '../components/Plateau.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -14,24 +15,29 @@ function play(){
     } else {
         localStorage.setItem("pseudo", pseudo.value)
         user.value = true
+        connectToNamespace()
     }
+}
+
+function connectToNamespace() {
+    const namespace = route.params.id
+    const socket = io(`http://localhost:3000/${namespace}`);
+    socket.on("connect_error", () => {
+        router.replace('/')
+    })
 }
 
 onMounted(() =>{
     if (localStorage.getItem('pseudo')) {
         user.value = true
-        const namespace = route.params.id
-        const socket = io(`http://localhost:3000/${namespace}`);
-        socket.on("connect_error", () => {
-            router.replace('/')
-        })
+        connectToNamespace()
     }
 })
 </script>
 
 <template>
     <div v-if="user">
-       GAME
+       <Plateau />
     </div>
     <div v-else>
         <div class="flex flex-col items-center h-screen bg-stone-600" style="background-image:linear-gradient(rgba(10, 80, 156, 0.5), rgba(135, 80, 156, 0.9)), url('./src/assets/background.jpg')">
