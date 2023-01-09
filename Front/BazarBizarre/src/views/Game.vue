@@ -2,6 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
+import { useMainStore } from '../store/main';
+
+const main = useMainStore()
 
 const router = useRouter()
 const route = useRoute()
@@ -21,9 +24,16 @@ function play(){
 
 function connectToNamespace() {
     const namespace = route.params.id
+    main.addRoom(namespace)
     const socket = io(`http://localhost:3000/${namespace}`);
     socket.on("connect_error", () => {
         router.replace('/')
+    })
+    socket.emit("newUser", localStorage.getItem('pseudo'))
+    socket.on("newUser", (data) => {
+        console.log(data)
+        namespaceProvide = namespace
+       players = data
     })
 }
 

@@ -2,6 +2,7 @@ const express = require('express');
 const socket = require('../index');
 const { randomNamespace } = require('../services/randomNamespace');
 const { deleteNamespace } = require('../services/deleteNamespace');
+const { addRoom, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers } = require('../models/rooms');
 
 const router = express.Router();
 
@@ -31,6 +32,7 @@ router.get('/deleteNamespace', (req, res) => {
 router.get('/newNamespace', (req, res) => {
     const namespace = randomNamespace();
     const io = socket.io.of(namespace);
+    addRoom(namespace);
     io.on('connection', (socket) => {
         // socket.on('essai', (msg)=> {
         // console.log(msg);
@@ -46,8 +48,12 @@ router.get('/newNamespace', (req, res) => {
                 deleteNamespace(namespace);
             }
         });
+        socket.on("newUser", function(pseudo) {
+            addPlayerToRoom(namespace, pseudo);
+            socket.emit("newUser", getPlayers(namespace));
+        });
     });
-    res.redirect(`http://localhost:3000/?${namespace}`);
+    res.send(`${namespace}`);
 });
 
 module.exports = router;

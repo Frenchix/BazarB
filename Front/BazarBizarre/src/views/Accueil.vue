@@ -14,7 +14,10 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios'
+import { useRouter, useRoute } from 'vue-router'
 
+const router = useRouter()
 const pseudo = ref()
 let isHidden = ref(true)
 
@@ -23,6 +26,11 @@ function newSalon(){
         isHidden.value = false
     } else {
         localStorage.setItem("pseudo", pseudo.value)
+        axios
+            .get("http://localhost:3000/newNamespace")
+            .then(response => {
+                router.replace(response.data)
+            })
     }
 }
 </script>
