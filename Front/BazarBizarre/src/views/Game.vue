@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
 import { useMainStore } from '../store/main'
@@ -28,7 +28,10 @@ async function connectToNamespace() {
     const pseudo = localStorage.getItem('pseudo')
     const response = await axios.get(`http://localhost:3000/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
     localStorage.setItem('pseudo', response.data) 
-    const socket = io(`http://localhost:3000/${namespace}`);
+    const socket = io(`http://localhost:3000/${namespace}`)
+    socket.on("connect", () => {
+        localStorage.setItem('id', socket.id)
+    })
     socket.on("connect_error", () => {
         router.replace('/')
     })

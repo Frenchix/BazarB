@@ -32,16 +32,20 @@ function removePlayerToRoom(id) {
     players.splice(indexPlayer, 1);
 }
 
-function addScore(roomName, player) {
-    const index = rooms.findIndex((element) => element.name === roomName);
-    const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
-    rooms[index].players[indexPlayer].score++;
+function addScore(id) {
+    // const index = rooms.findIndex((element) => element.name === roomName);
+    // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
+    // rooms[index].players[indexPlayer].score++;
+    const indexPlayer = players.findIndex((element) => element.id === id);
+    players[indexPlayer].score++;
 }
 
 function removeScore(roomName, player) {
-    const index = rooms.findIndex((element) => element.name === roomName);
-    const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
-    rooms[index].players[indexPlayer].score--;
+    // const index = rooms.findIndex((element) => element.name === roomName);
+    // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
+    // rooms[index].players[indexPlayer].score--;
+    const indexPlayer = players.findIndex((element) => element.id === id);
+    players[indexPlayer].score--;
 }
 
 function getPlayers(roomName) {

@@ -51,4 +51,9 @@ router.get('/newNamespace', (req, res) => {
     res.send(`${namespace}`);
 });
 
+router.post('/addScore', (req, res) => {
+    const id = req.body.id
+    addScore(id);
+})
+
 module.exports = router;

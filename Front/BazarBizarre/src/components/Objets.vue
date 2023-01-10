@@ -1,5 +1,16 @@
 <script setup>
-function Essai(event) {
+import axios from 'axios'
+
+function addScore(event) {
+    console.log(event.srcElement.farthestViewportElement.id)
+    axios
+        .post('http://localhost:3000/addScore', localStorage.getItem('id'))
+        .then(response => {
+            
+        })
+}
+
+function removeScore(event) {
     console.log(event.srcElement.farthestViewportElement.id)
 }
 </script>
@@ -48,7 +59,7 @@ function Essai(event) {
         </svg>
         <svg class="w-1/8" version="1.1" id="canape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
         viewBox="0 0 58 58" xml:space="preserve">
-        <g @click="Essai">
+        <g @click="addScore">
             <path style="fill:#DD352E;stroke:#B02721;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
                 M53.395,23.545C51.318,19.943,47.434,17.5,43,17.5h-0.541c-1.664-4.615-7.053-8-13.459-8s-11.796,3.385-13.459,8H15
                 c-4.434,0-8.318,2.443-10.395,6.045C4.741,23.557,3.868,25.477,4,25.5v14h50v-13C54.132,26.477,53.259,23.557,53.395,23.545z"/>
@@ -80,7 +91,7 @@ function Essai(event) {
             viewBox="0 0 113.38582 106.29921"
             id="livre"
             version="1.1">
-            <g  @click="Essai"
+            <g  @click="removeScore"
                 inkscape:groupmode="layer"
                 id="layer2"
                 inkscape:label="Ebene 2"
