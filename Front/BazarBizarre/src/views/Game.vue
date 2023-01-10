@@ -1,8 +1,9 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
-import { useMainStore } from '../store/main';
+import { useMainStore } from '../store/main'
+import axios from 'axios'
 
 const main = useMainStore()
 
@@ -22,18 +23,18 @@ function play(){
     }
 }
 
-function connectToNamespace() {
+async function connectToNamespace() {
     const namespace = route.params.id
-    main.addRoom(namespace)
+    const pseudo = localStorage.getItem('pseudo')
+    const response = await axios.get(`http://localhost:3000/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
+    localStorage.setItem('pseudo', response.data) 
     const socket = io(`http://localhost:3000/${namespace}`);
     socket.on("connect_error", () => {
         router.replace('/')
     })
-    socket.emit("newUser", localStorage.getItem('pseudo'))
+    socket.emit("newUser", namespace, localStorage.getItem('pseudo'))
     socket.on("newUser", (data) => {
-        console.log(data)
-        namespaceProvide = namespace
-       players = data
+        main.players = data
     })
 }
 

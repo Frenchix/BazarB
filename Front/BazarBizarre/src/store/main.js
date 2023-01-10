@@ -1,20 +1,11 @@
 import { createPinia, defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
-export const useMainStore = defineStore('main', {
-    state: () => ({
-        rooms: ref([]),
-      }),
-      actions: {
-        addRoom(name) {
-            this.rooms.push({
-                name: name,
-                players: []
-            });
-            console.log(this.rooms);
-        },
-      },
-})
+export const useMainStore = defineStore('main', () => {
+    const players = reactive([])
+    
+    return { players }
+  })
 
 const store = createPinia()
 
