@@ -29,7 +29,9 @@ async function connectToNamespace() {
     const response = await axios.get(`http://localhost:3000/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
     localStorage.setItem('pseudo', response.data) 
     const socket = io(`http://localhost:3000/${namespace}`)
+    main.socket = socket
     socket.on("connect", () => {
+        console.log("connect")
         localStorage.setItem('id', socket.id)
     })
     socket.on("connect_error", () => {

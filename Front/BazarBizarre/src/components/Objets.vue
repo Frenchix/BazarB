@@ -1,17 +1,28 @@
 <script setup>
 import axios from 'axios'
+import { useRoute } from 'vue-router'
+import { useMainStore } from '../store/main'
+
+const main = useMainStore()
+
+const route = useRoute()
 
 function addScore(event) {
-    console.log(event.srcElement.farthestViewportElement.id)
-    axios
-        .post('http://localhost:3000/addScore', localStorage.getItem('id'))
-        .then(response => {
+    // console.log(event.srcElement.farthestViewportElement.id)
+    // axios
+    //     .post('http://localhost:3000/addScore', localStorage.getItem('id'))
+    //     .then(response => {
             
-        })
+    //     })
+    const namespace = route.params.id
+    const socket = main.socket
+    socket.emit("addScore", localStorage.getItem('id'), namespace)
 }
 
 function removeScore(event) {
-    console.log(event.srcElement.farthestViewportElement.id)
+    const namespace = route.params.id
+    const socket = main.socket
+    socket.emit("removeScore", localStorage.getItem('id'), namespace)
 }
 </script>
 

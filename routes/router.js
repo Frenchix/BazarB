@@ -47,6 +47,14 @@ router.get('/newNamespace', (req, res) => {
             addPlayerToRoom(namespace, player);
             io.emit("newUser", getPlayers(namespace));
         });
+        socket.on("addScore", (id, namespace) => {
+            addScore(id);
+            io.emit("newUser", getPlayers(namespace));
+        })
+        socket.on("removeScore", (id, namespace) => {
+            removeScore(id);
+            io.emit("newUser", getPlayers(namespace));
+        })
     });
     res.send(`${namespace}`);
 });

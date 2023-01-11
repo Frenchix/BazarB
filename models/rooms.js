@@ -40,7 +40,7 @@ function addScore(id) {
     players[indexPlayer].score++;
 }
 
-function removeScore(roomName, player) {
+function removeScore(id) {
     // const index = rooms.findIndex((element) => element.name === roomName);
     // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
     // rooms[index].players[indexPlayer].score--;
