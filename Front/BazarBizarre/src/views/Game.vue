@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, provide } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
 import { useMainStore } from '../store/main'
@@ -12,6 +12,18 @@ const route = useRoute()
 let pseudo = ref()
 let user = ref(false)
 let isHidden = ref(true)
+let i = ref()
+provide('counter', i)
+
+function compteARebourd(){
+    i.value = 3
+    const interval = setInterval(() => {
+        i.value--
+        if (i.value === 0) {
+            clearInterval(interval)
+        }
+    }, 1000)
+}
 
 function play(){
     if (!pseudo.value){
@@ -40,6 +52,9 @@ async function connectToNamespace() {
     socket.emit("newUser", namespace, localStorage.getItem('pseudo'))
     socket.on("newUser", (data) => {
         main.players = data
+    })
+    socket.on("launchCAR", () => {
+        compteARebourd()
     })
 }
 

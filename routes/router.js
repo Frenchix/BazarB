@@ -2,7 +2,7 @@ const express = require('express');
 const socket = require('../index');
 const { randomNamespace } = require('../services/randomNamespace');
 const { deleteNamespace } = require('../services/deleteNamespace');
-const { addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo } = require('../models/rooms');
+const { addPlayerToRoom, addRoom, removeCard, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo } = require('../models/rooms');
 
 const router = express.Router();
 let player = {};
@@ -30,6 +30,7 @@ router.get('/checkPseudo', (req, res) => {
   
 router.get('/newNamespace', (req, res) => {
     const namespace = randomNamespace();
+    addRoom(namespace);
     const io = socket.io.of(namespace);
     io.on('connection', (socket) => {
         console.log('user connected');
@@ -50,10 +51,16 @@ router.get('/newNamespace', (req, res) => {
         socket.on("addScore", (id, namespace) => {
             addScore(id);
             io.emit("newUser", getPlayers(namespace));
+            io.emit("launchCAR");
         })
         socket.on("removeScore", (id, namespace) => {
             removeScore(id);
             io.emit("newUser", getPlayers(namespace));
+        })
+        socket.on("removeCard", (namespace) => {
+            console.log("removeCard")
+            removeCard(namespace);
+            // io.emit("newUser", getPlayers(namespace));
         })
     });
     res.send(`${namespace}`);
