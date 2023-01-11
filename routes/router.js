@@ -2,7 +2,7 @@ const express = require('express');
 const socket = require('../index');
 const { randomNamespace } = require('../services/randomNamespace');
 const { deleteNamespace } = require('../services/deleteNamespace');
-const { addPlayerToRoom, addRoom, removeCard, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo } = require('../models/rooms');
+const { addPlayerToRoom, addRoom, getCard, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo } = require('../models/rooms');
 
 const router = express.Router();
 let player = {};
@@ -51,7 +51,6 @@ router.get('/newNamespace', (req, res) => {
         socket.on("addScore", (id, namespace) => {
             addScore(id);
             io.emit("newUser", getPlayers(namespace));
-            io.emit("launchCAR");
         })
         socket.on("removeScore", (id, namespace) => {
             removeScore(id);
@@ -62,13 +61,24 @@ router.get('/newNamespace', (req, res) => {
             removeCard(namespace);
             // io.emit("newUser", getPlayers(namespace));
         })
+        socket.on("launchCAR", () => {
+            io.emit("launchCAR");
+        })
     });
     res.send(`${namespace}`);
 });
 
 router.post('/addScore', (req, res) => {
-    const id = req.body.id
+    const id = req.body.id;
     addScore(id);
+})
+
+router.get('/getCard', (req, res) => {
+    console.log("coucou")
+    const roomName = req.query.roomName;
+    const card = getCard(roomName);
+    socket.io.of(roomName).emit("getCard", card);
+    res.json(card);
 })
 
 module.exports = router;

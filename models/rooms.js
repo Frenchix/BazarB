@@ -10,10 +10,11 @@ function addRoom(name) {
     });
 }
 
-function removeCard(roomName) {
+function getCard(roomName) {
     const index = rooms.findIndex((element) => element.name === roomName);
-    const cartes = randomInt(rooms[index].cartes.length);
-    rooms[index].cartes.splice(cartes, 1);
+    const carte = randomInt(rooms[index].cartes.length);
+    rooms[index].cartes.splice(carte, 1);
+    return rooms[index].cartes[carte];
 }
 
 function resetCard(roomName) {
@@ -74,4 +75,4 @@ function checkPseudo(roomName, pseudo) {
     return pseudo;
 }
 
-module.exports = { addRoom, removeCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo };
+module.exports = { addRoom, getCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo };

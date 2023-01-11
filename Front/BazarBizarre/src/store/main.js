@@ -4,7 +4,10 @@ import { reactive, ref } from 'vue'
 export const useMainStore = defineStore('main', () => {
     const players = reactive([])
     const socket = {}
-    return { players, socket }
+    const goodAnswer = ''
+    const pauseGame = ref(false)
+
+    return { players, socket, goodAnswer, pauseGame }
   })
 
 const store = createPinia()

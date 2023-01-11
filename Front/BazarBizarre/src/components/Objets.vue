@@ -1,24 +1,32 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { useMainStore } from '../store/main'
+import { inject } from 'vue'
 
+const compteARebourd = inject('car')
 const main = useMainStore()
 
 const route = useRoute()
 
-function addScore(event) {
-    // console.log(event.srcElement.farthestViewportElement.id)
-    // axios
-    //     .post('http://localhost:3000/addScore', localStorage.getItem('id'))
-    //     .then(response => {
-            
-    //     })
+function clickOnObject(event) {
+    console.log("click", main.goodAnswer)
+    if (event.srcElement.farthestViewportElement.id == main.goodAnswer) {
+        addScore()
+        
+    } else {
+        removeScore()
+        main.pauseGame = true;
+        compteARebourd()
+    }
+}
+
+function addScore() {
     const namespace = route.params.id
     const socket = main.socket
     socket.emit("addScore", localStorage.getItem('id'), namespace)
 }
 
-function removeScore(event) {
+function removeScore() {
     const namespace = route.params.id
     const socket = main.socket
     socket.emit("removeScore", localStorage.getItem('id'), namespace)
@@ -27,11 +35,11 @@ function removeScore(event) {
 
 <template>
     <div class="flex w-full h-1/3 my-10 justify-center gap-5">
-        <svg class="w-1/8" version="1.0" xmlns="http://www.w3.org/2000/svg"
+        <svg class="w-1/8" version="1.0" xmlns="http://www.w3.org/2000/svg" :class="{ 'pointer-events-none': main.pauseGame }"
             viewBox="0 0 1055.000000 1280.000000"
             preserveAspectRatio="xMidYMid meet" id="fantome">
             <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
-            fill="#000000" stroke="none" @click="Essai">
+            fill="#000000" stroke="none" @click="clickOnObject">
             <path d="M4798 12789 c-2 -6 -55 -17 -118 -24 -721 -84 -1389 -333 -2015 -750
             -462 -308 -773 -610 -1044 -1010 -368 -544 -650 -1278 -891 -2319 -328 -1420
             -615 -3562 -694 -5186 -9 -173 -20 -396 -26 -495 -13 -227 -13 -534 0 -701 5
@@ -67,9 +75,9 @@ function removeScore(event) {
             925 -117 20 -355 20 -466 0z"/>
             </g>
         </svg>
-        <svg class="w-1/8" version="1.1" id="canape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+        <svg class="w-1/8" :class="{ 'pointer-events-none': main.pauseGame }" version="1.1" id="canape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
         viewBox="0 0 58 58" xml:space="preserve">
-        <g @click="addScore">
+        <g @click="clickOnObject">
             <path style="fill:#DD352E;stroke:#B02721;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" d="
                 M53.395,23.545C51.318,19.943,47.434,17.5,43,17.5h-0.541c-1.664-4.615-7.053-8-13.459-8s-11.796,3.385-13.459,8H15
                 c-4.434,0-8.318,2.443-10.395,6.045C4.741,23.557,3.868,25.477,4,25.5v14h50v-13C54.132,26.477,53.259,23.557,53.395,23.545z"/>
@@ -98,10 +106,11 @@ function removeScore(event) {
         </svg>
         <svg
             class="w-1/8" 
+            :class="{ 'pointer-events-none': main.pauseGame }"
             viewBox="0 0 113.38582 106.29921"
             id="livre"
             version="1.1">
-            <g  @click="removeScore"
+            <g  @click="clickOnObject"
                 inkscape:groupmode="layer"
                 id="layer2"
                 inkscape:label="Ebene 2"
@@ -167,8 +176,8 @@ function removeScore(event) {
             </g>
         </svg>
         <svg  viewBox="0 0 209.66 374.06"
-            version="1.1" class="w-1/8" id="bouteille">
-            <g @click="Essai"
+            version="1.1" class="w-1/8" :class="{ 'pointer-events-none': main.pauseGame }" id="bouteille">
+            <g @click="clickOnObject"
                 id="layer1"
                 inkscape:label="Capa 1"
                 inkscape:groupmode="layer"
@@ -255,8 +264,8 @@ function removeScore(event) {
                 />
             </g>
         </svg>
-        <svg class="w-1/8" viewBox="0 0 330.48 325.95" xmlns="http://www.w3.org/2000/svg" id="souris">
-            <g @click="Essai">
+        <svg class="w-1/8" :class="{ 'pointer-events-none': main.pauseGame }" viewBox="0 0 330.48 325.95" xmlns="http://www.w3.org/2000/svg" id="souris">
+            <g @click="clickOnObject">
                 <g fill-rule="evenodd" stroke-width="4">
                 <path d="m227.13 51.998c-1.8886-23.292-78.061-85.615-144.79-22.663s-72.395 33.365-78.69 34.624c-6.2952 1.259 6.2658 14.893 23.922 12.59 43.437-5.6657 72.395-59.804 112.68-59.175 40.598 0.63434 62.323 35.883 62.323 35.883l24.551-1.259z" fill="#7f7f7f" stroke="#000"/>
                 <path d="m140.19 11.188c-18.054 0.20866-37.59 7.3197-56.281 26.062-17.21 17.257-29.88 27.168-39.344 32.625v1.9375c34.528-14.648 60.886-54.981 95.688-54.438 40.598 0.63434 62.312 35.875 62.312 35.875l9.4375-0.4688c-7.2834-16.49-36.785-41.999-71.812-41.594z" fill-opacity=".314"/>
