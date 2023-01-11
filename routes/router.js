@@ -56,14 +56,14 @@ router.get('/newNamespace', (req, res) => {
             removeScore(id);
             io.emit("newUser", getPlayers(namespace));
         })
-        socket.on("removeCard", (namespace) => {
-            console.log("removeCard")
-            removeCard(namespace);
-            // io.emit("newUser", getPlayers(namespace));
-        })
-        socket.on("launchCAR", () => {
-            io.emit("launchCAR");
-        })
+        // socket.on("removeCard", (namespace) => {
+        //     console.log("removeCard")
+        //     removeCard(namespace);
+        //     // io.emit("newUser", getPlayers(namespace));
+        // })
+        // socket.on("launchCAR", () => {
+        //     io.emit("launchCAR");
+        // })
     });
     res.send(`${namespace}`);
 });
@@ -74,7 +74,6 @@ router.post('/addScore', (req, res) => {
 })
 
 router.get('/getCard', (req, res) => {
-    console.log("coucou")
     const roomName = req.query.roomName;
     const card = getCard(roomName);
     socket.io.of(roomName).emit("getCard", card);

@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import { useMainStore } from '../store/main'
 import { inject } from 'vue'
 
-const compteARebourd = inject('car')
+const getCard = inject('getCard')
 const main = useMainStore()
 
 const route = useRoute()
@@ -12,11 +12,11 @@ function clickOnObject(event) {
     console.log("click", main.goodAnswer)
     if (event.srcElement.farthestViewportElement.id == main.goodAnswer) {
         addScore()
-        
+        getCard()
     } else {
         removeScore()
         main.pauseGame = true;
-        compteARebourd()
+        
     }
 }
 

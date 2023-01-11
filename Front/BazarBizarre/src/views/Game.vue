@@ -14,21 +14,24 @@ let user = ref(false)
 let isHidden = ref(true)
 let i = ref()
 provide('counter', i)
-provide('car', compteARebourd)
+provide('getCard', getCard)
 
-async function compteARebourd(){
-    main.pauseGame = true
-    const namespace = route.params.id
-    const response = await axios.get(`http://localhost:3000/getCard?roomName=${namespace}`)
+function compteARebourd(card){
     i.value = 3
     const interval = setInterval(() => {
         i.value--
         if (i.value === 0) {
             clearInterval(interval)
-            i.value = response.data
+            i.value = card
             main.pauseGame = false
         }
     }, 1000)
+}
+
+async function getCard() {
+    main.pauseGame = true
+    const namespace = route.params.id
+    const response = await axios.get(`http://localhost:3000/getCard?roomName=${namespace}`)
 }
 
 function play(){
@@ -59,13 +62,14 @@ async function connectToNamespace() {
     socket.on("newUser", (data) => {
         main.players = data
     })
-    socket.on("launchCAR", () => {
-        console.log("laucneh")
-        compteARebourd()
-    })
-    socket.on("getCard", (answer) => {
-        console.log(answer)
-        main.goodAnswer = answer
+    // socket.on("launchCAR", () => {
+    //     console.log("laucneh")
+    //     compteARebourd()
+    // })
+    socket.on("getCard", (card) => {
+        console.log(card)
+        main.goodAnswer = card.goodAnswer
+        compteARebourd(card.name)
     })
 }
 
