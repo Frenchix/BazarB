@@ -27,7 +27,7 @@ function newSalon(){
     } else {
         localStorage.setItem("pseudo", pseudo.value)
         axios
-            .get("http://localhost:3000/newNamespace")
+            .get(`${import.meta.env.VITE_HOST_API}/newNamespace`)
             .then(response => {
                 router.replace(response.data)
             })

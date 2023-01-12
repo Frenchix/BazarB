@@ -31,7 +31,7 @@ function compteARebourd(card){
 async function getCard() {
     main.pauseGame = true
     const namespace = route.params.id
-    const response = await axios.get(`http://localhost:3000/getCard?roomName=${namespace}`)
+    const response = await axios.get(`${import.meta.env.VITE_HOST_API}/getCard?roomName=${namespace}`)
 }
 
 function play(){
@@ -47,9 +47,9 @@ function play(){
 async function connectToNamespace() {
     const namespace = route.params.id
     const pseudo = localStorage.getItem('pseudo')
-    const response = await axios.get(`http://localhost:3000/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
+    const response = await axios.get(`${import.meta.env.VITE_HOST_API}/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
     localStorage.setItem('pseudo', response.data) 
-    const socket = io(`http://localhost:3000/${namespace}`)
+    const socket = io(`${import.meta.env.VITE_HOST}/${namespace}`)
     main.socket = socket
     socket.on("connect", () => {
         console.log("connect")
@@ -62,10 +62,6 @@ async function connectToNamespace() {
     socket.on("newUser", (data) => {
         main.players = data
     })
-    // socket.on("launchCAR", () => {
-    //     console.log("laucneh")
-    //     compteARebourd()
-    // })
     socket.on("getCard", (card) => {
         console.log(card)
         main.goodAnswer = card.goodAnswer

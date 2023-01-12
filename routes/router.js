@@ -56,14 +56,6 @@ router.get('/newNamespace', (req, res) => {
             removeScore(id);
             io.emit("newUser", getPlayers(namespace));
         })
-        // socket.on("removeCard", (namespace) => {
-        //     console.log("removeCard")
-        //     removeCard(namespace);
-        //     // io.emit("newUser", getPlayers(namespace));
-        // })
-        // socket.on("launchCAR", () => {
-        //     io.emit("launchCAR");
-        // })
     });
     res.send(`${namespace}`);
 });
