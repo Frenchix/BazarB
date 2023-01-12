@@ -13,6 +13,7 @@ const io = new Server(server, {
 });
 module.exports.io = io;
 
+const port = process.env.PORT || 5002
 app.use(cors());
 app.use('/api', router);
 
@@ -24,7 +25,7 @@ if(process.env.NODE_ENV !== 'development') {
     });
 }
 
-server.listen(3000, () => {
+server.listen(port, () => {
   console.log('listening on *:3000');
 });
 
