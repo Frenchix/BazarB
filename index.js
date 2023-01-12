@@ -8,7 +8,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const router = require('./routes/router.js');
 const io = new Server(server, {
-    cors: '*'
+    cors: '*',
+    transports: ["websocket"]
 });
 module.exports.io = io;
 

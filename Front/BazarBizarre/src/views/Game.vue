@@ -49,7 +49,7 @@ async function connectToNamespace() {
     const pseudo = localStorage.getItem('pseudo')
     const response = await axios.get(`${import.meta.env.VITE_HOST_API}/checkPseudo?pseudo=${pseudo}&roomName=${namespace}`)
     localStorage.setItem('pseudo', response.data) 
-    const socket = io(`${import.meta.env.VITE_HOST}/${namespace}`)
+    const socket = io(`${import.meta.env.VITE_HOST}/${namespace}`, { transports: ["websocket"] })
     main.socket = socket
     socket.on("connect", () => {
         console.log("connect")
