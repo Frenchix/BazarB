@@ -28,7 +28,8 @@ const route = useRoute()
             <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="getCard">Jouer</button>
         </div>
         <div class="border border-black w-2/12 h-2/3 text-[180px] flex items-center justify-center">
-            {{ counter }}
+            <!-- {{ counter }} -->
+            <img class="max-w-fit max-h-fit" src="../assets/1.jpg" alt="">
         </div>
         <div></div>
     </div>
