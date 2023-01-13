@@ -7,14 +7,12 @@ const rooms = [];
 function addRoom(name) {
     rooms.push({
         name: name,
-        cartes: cartes
+        cartes: [...cartes]
     });
-    console.log(rooms[0].cartes);
 }
 
 function getCard(roomName) {
     const index = rooms.findIndex((element) => element.name === roomName);
-    console.log("room", rooms[index]);
     if (rooms[index].cartes.length > 0) {
         const carte = randomInt(rooms[index].cartes.length);
         const carteToReturn = rooms[index].cartes[carte]
@@ -28,16 +26,11 @@ function getCard(roomName) {
 
 function resetCard(roomName) {
     const index = rooms.findIndex((element) => element.name === roomName);
-    rooms[index].cartes = [cartes];
+    rooms[index].cartes = [...cartes];
+    console.log("room", rooms[index])
 }
 
 function addPlayerToRoom(roomName, newPlayer) {
-    // const index = rooms.findIndex((element) => element.name ==roomName);
-    // console.log("index", index);
-    // rooms[index].players.push({
-    //     pseudo: newPlayer,
-    //     score: 0
-    // });
     players.push({
         room: roomName,
         pseudo: newPlayer.pseudo,
@@ -47,27 +40,20 @@ function addPlayerToRoom(roomName, newPlayer) {
 }
 
 function removePlayerToRoom(id) {
-    // const index = rooms.findIndex((element) => element.name === roomName);
-    // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
-    // rooms[index].players.splice(indexPlayer, 1);
     const indexPlayer = players.findIndex((element) => element.id === id);
     players.splice(indexPlayer, 1);
 }
 
 function addScore(id) {
-    // const index = rooms.findIndex((element) => element.name === roomName);
-    // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
-    // rooms[index].players[indexPlayer].score++;
     const indexPlayer = players.findIndex((element) => element.id === id);
     players[indexPlayer].score++;
+    return players[indexPlayer].pseudo;
 }
 
 function removeScore(id) {
-    // const index = rooms.findIndex((element) => element.name === roomName);
-    // const indexPlayer = rooms[index].players.findIndex((element) => element.pseudo === player);
-    // rooms[index].players[indexPlayer].score--;
     const indexPlayer = players.findIndex((element) => element.id === id);
     players[indexPlayer].score--;
+    return players[indexPlayer].pseudo;
 }
 
 function getPlayers(roomName) {
@@ -83,4 +69,15 @@ function checkPseudo(roomName, pseudo) {
     return pseudo;
 }
 
-module.exports = { addRoom, getCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo };
+function newGame(roomName) {
+    resetCard(roomName)
+    const playersArray = players.map((player) => {
+        if (player.room === roomName) {
+            player.score = 0
+            return player
+        }
+    })
+    return playersArray;
+}
+
+module.exports = { addRoom, getCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo, newGame };

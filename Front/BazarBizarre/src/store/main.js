@@ -5,7 +5,7 @@ export const useMainStore = defineStore('main', () => {
     const players = reactive([])
     const socket = {}
     const goodAnswer = ''
-    const pauseGame = ref(false)
+    const pauseGame = ref(true)
 
     return { players, socket, goodAnswer, pauseGame }
   })

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, provide } from 'vue'
+import { onMounted, ref, provide, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
 import { useMainStore } from '../store/main'
@@ -13,8 +13,19 @@ let pseudo = ref()
 let user = ref(false)
 let isHidden = ref(true)
 let i = ref()
+let messages = ref([])
+let endGame = ref(false)
 provide('counter', i)
 provide('getCard', getCard)
+provide('messages', messages)
+provide('endGame', endGame)
+provide('newGame', newGame)
+
+async function newGame() {
+    endGame.value = false
+    const namespace = route.params.id
+    const response = await axios.get(`${import.meta.env.VITE_HOST_API}/newGame?roomName=${namespace}`)
+}
 
 function compteARebourd(card){
     i.value = 3
@@ -22,7 +33,7 @@ function compteARebourd(card){
         i.value--
         if (i.value === 0) {
             clearInterval(interval)
-            i.value = card
+            i.value = card.name
             main.pauseGame = false
         }
     }, 1000)
@@ -63,15 +74,26 @@ async function connectToNamespace() {
         main.players = data
     })
     socket.on("getCard", (card) => {
-        console.log(card)
-        main.goodAnswer = card.goodAnswer
-        compteARebourd(card.name)
+        messages.value = []
+        if(card === 'Fin') {
+            endGame.value = true
+        } else {
+            main.goodAnswer = card.goodAnswer
+            compteARebourd(card.name)
+        }
+    })
+    socket.on("messages", (pseudo) => {
+        messages.value.push(pseudo)
+    })
+    socket.on("newGame", (players) => {
+        main.players = players
     })
 }
 
 onMounted(() =>{
     if (localStorage.getItem('pseudo')) {
         user.value = true
+
         connectToNamespace()
     }
 })
