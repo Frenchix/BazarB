@@ -6,8 +6,20 @@ export const useMainStore = defineStore('main', () => {
     const socket = {}
     const goodAnswer = ''
     const pauseGame = ref(true)
+    const hidden = reactive({
+      isHiddenfantomeGood: true,
+      isHiddenfantomeBad: true,
+      isHiddencanapeGood: true,
+      isHiddencanapeBad: true,
+      isHiddenlivreGood: true,
+      isHiddenlivreBad: true,
+      isHiddenbouteilleGood: true,
+      isHiddenbouteilleBad: true,
+      isHiddensourisGood: true,
+      isHiddensourisBad: true
+    })
 
-    return { players, socket, goodAnswer, pauseGame }
+    return { players, socket, goodAnswer, pauseGame, hidden }
   })
 
 const store = createPinia()

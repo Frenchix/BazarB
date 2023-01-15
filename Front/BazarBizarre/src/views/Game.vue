@@ -6,6 +6,7 @@ import { useMainStore } from '../store/main'
 import axios from 'axios'
 
 const main = useMainStore()
+const { hidden } = main
 
 const router = useRouter()
 const route = useRoute()
@@ -41,6 +42,9 @@ function compteARebourd(card){
 
 async function getCard() {
     main.pauseGame = true
+    for (const item in hidden){
+        hidden[item] = true
+    }
     const namespace = route.params.id
     const response = await axios.get(`${import.meta.env.VITE_HOST_API}/getCard?roomName=${namespace}`)
 }
