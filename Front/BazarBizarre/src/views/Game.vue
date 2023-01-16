@@ -34,7 +34,7 @@ function compteARebourd(card){
         i.value--
         if (i.value === 0) {
             clearInterval(interval)
-            i.value = card.name
+            i.value = card
             main.pauseGame = false
         }
     }, 1000)

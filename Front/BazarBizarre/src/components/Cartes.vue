@@ -18,7 +18,7 @@ const newGame = inject('newGame')
             <div v-if="counter >= 0">
                 {{ counter }}
             </div>
-            <img v-else class="max-w-full max-h-full" v-bind:src="`../assets/${counter}`" alt="">
+            <img v-else class="max-w-full max-h-full" v-bind:src="`./src/assets/${counter}`" alt="">
         </div>
         <div></div>
     </div>
