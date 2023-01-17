@@ -16,6 +16,9 @@
 import { ref } from 'vue';
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useMainStore } from '../store/main'
+
+const main = useMainStore()
 
 const router = useRouter()
 const pseudo = ref()
@@ -26,6 +29,7 @@ function newSalon(){
         isHidden.value = false
     } else {
         localStorage.setItem("pseudo", pseudo.value)
+        main.isAdmin = true
         axios
             .get(`${import.meta.env.VITE_HOST_API}/newNamespace`)
             .then(response => {

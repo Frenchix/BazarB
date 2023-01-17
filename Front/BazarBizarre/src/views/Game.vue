@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, provide, reactive } from 'vue'
+import { onMounted, ref, provide } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
 import { useMainStore } from '../store/main'
@@ -42,9 +42,6 @@ function compteARebourd(card){
 
 async function getCard() {
     main.pauseGame = true
-    for (const item in hidden){
-        hidden[item] = true
-    }
     const namespace = route.params.id
     const response = await axios.get(`${import.meta.env.VITE_HOST_API}/getCard?roomName=${namespace}`)
 }
@@ -78,6 +75,9 @@ async function connectToNamespace() {
         main.players = data
     })
     socket.on("getCard", (card) => {
+        for (const item in hidden){
+            hidden[item] = true
+        }
         messages.value = []
         if(card === 'Fin') {
             endGame.value = true
