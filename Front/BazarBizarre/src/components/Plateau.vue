@@ -32,7 +32,7 @@ function copyClipboard(){
             <div class="w-full relative">
                 <Objets />
                 <Cartes />
-                <div class="absolute bottom-5 left-5">
+                <div class="absolute bottom-2 left-5">
                     <span id="url" class="border border-black bg-white rounded-xl p-2 mr-2">
                         {{ url }}
                     </span>

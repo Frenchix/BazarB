@@ -36,7 +36,7 @@ function removeScore() {
 </script>
 
 <template>
-    <div class="flex w-full h-1/3 my-10 justify-center gap-5">
+    <div class="flex w-full h-1/3 my-8 justify-center gap-5">
         <div class="w-1/8 relative">
             <svg
                 class="w-full h-full" :class="{ 'pointer-events-none': main.pauseGame }" @click="clickOnObject"
