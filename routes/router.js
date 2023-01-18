@@ -49,7 +49,8 @@ router.get('/newNamespace', (req, res) => {
             io.emit("newUser", getPlayers(namespace));
         });
         socket.on("addScore", (id, namespace, ms) => {
-            if (checkWinner(namespace, ms)){
+            const time = new Date().getTime() 
+            if (checkWinner(namespace, time)){
                 const pseudo = addScore(id);
                 io.emit("newUser", getPlayers(namespace));
                 io.emit("messages", {pseudo: `${pseudo}`, reponse: 'good'});
