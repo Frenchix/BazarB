@@ -7,8 +7,22 @@ const rooms = [];
 function addRoom(name) {
     rooms.push({
         name: name,
-        cartes: [...cartes]
+        cartes: [...cartes],
+        nbTours: 0,
+        timeWinner: 9999999999999999
     });
+}
+
+function checkWinner(roomName, time){
+    console.log("time", time);
+    const index = rooms.findIndex((element) => element.name === roomName);
+    if (time < rooms[index].timeWinner){
+        rooms[index].timeWinner = time;
+        console.log(rooms[index])
+        return true
+    } else {
+        return false
+    }
 }
 
 function getCard(roomName) {
@@ -17,6 +31,7 @@ function getCard(roomName) {
         const carte = randomInt(rooms[index].cartes.length);
         const carteToReturn = rooms[index].cartes[carte]
         rooms[index].cartes.splice(carte, 1);
+        rooms[index].timeWinner = 9999999999999999;
         return carteToReturn;
     } else {
         return "Fin";
@@ -27,6 +42,8 @@ function getCard(roomName) {
 function resetCard(roomName) {
     const index = rooms.findIndex((element) => element.name === roomName);
     rooms[index].cartes = [...cartes];
+    rooms[index].nbTours = 0;
+    rooms[index].timeWinner = 9999999999999999;
     console.log("room", rooms[index])
 }
 
@@ -80,4 +97,4 @@ function newGame(roomName) {
     return playersArray;
 }
 
-module.exports = { addRoom, getCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo, newGame };
+module.exports = { addRoom, getCard, resetCard, addPlayerToRoom, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo, newGame, checkWinner };

@@ -14,7 +14,7 @@ function clickOnObject(event) {
         hidden[`isHidden${event.srcElement.farthestViewportElement.id}Good`] = false
         main.pauseGame = true;
         addScore()
-        setTimeout(() => getCard(), 2000)
+        // setTimeout(() => getCard(), 2000)
     } else {
         removeScore()
         main.pauseGame = true;
@@ -25,7 +25,7 @@ function clickOnObject(event) {
 function addScore() {
     const namespace = route.params.id
     const socket = main.socket
-    socket.emit("addScore", localStorage.getItem('id'), namespace)
+    socket.emit("addScore", localStorage.getItem('id'), namespace, new Date().getTime())
 }
 
 function removeScore() {

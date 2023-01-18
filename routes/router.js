@@ -2,7 +2,7 @@ const express = require('express');
 const socket = require('../index');
 const { randomNamespace } = require('../services/randomNamespace');
 const { deleteNamespace } = require('../services/deleteNamespace');
-const { addPlayerToRoom, addRoom, getCard, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo, newGame } = require('../models/rooms');
+const { addPlayerToRoom, addRoom, getCard, removePlayerToRoom, addScore, removeScore, getPlayers, checkPseudo, newGame, checkWinner } = require('../models/rooms');
 
 const router = express.Router();
 let player = {};
@@ -48,10 +48,16 @@ router.get('/newNamespace', (req, res) => {
             addPlayerToRoom(namespace, player);
             io.emit("newUser", getPlayers(namespace));
         });
-        socket.on("addScore", (id, namespace) => {
-            const pseudo = addScore(id);
-            io.emit("newUser", getPlayers(namespace));
-            io.emit("messages", {pseudo: `${pseudo}`, reponse: 'good'});
+        socket.on("addScore", (id, namespace, ms) => {
+            if (checkWinner(namespace, ms)){
+                const pseudo = addScore(id);
+                io.emit("newUser", getPlayers(namespace));
+                io.emit("messages", {pseudo: `${pseudo}`, reponse: 'good'});
+                setTimeout(() => {
+                    const card = getCard(namespace);
+                    io.emit("getCard", card);
+                }, 2000)
+            }
         })
         socket.on("removeScore", (id, namespace) => {
             const pseudo = removeScore(id);
