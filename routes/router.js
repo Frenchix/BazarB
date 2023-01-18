@@ -49,6 +49,7 @@ router.get('/newNamespace', (req, res) => {
             io.emit("newUser", getPlayers(namespace));
         });
         socket.on("addScore", (id, namespace, ms) => {
+            io.emit("pauseGame");
             const time = new Date().getTime() 
             if (checkWinner(namespace, time)){
                 const pseudo = addScore(id);
@@ -59,7 +60,7 @@ router.get('/newNamespace', (req, res) => {
                     io.emit("getCard", card);
                 }, 2000)
             }
-        })
+        });
         socket.on("removeScore", (id, namespace) => {
             const pseudo = removeScore(id);
             io.emit("newUser", getPlayers(namespace));

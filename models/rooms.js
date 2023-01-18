@@ -14,11 +14,9 @@ function addRoom(name) {
 }
 
 function checkWinner(roomName, time){
-    console.log("time", time);
     const index = rooms.findIndex((element) => element.name === roomName);
     if (time < rooms[index].timeWinner){
         rooms[index].timeWinner = time;
-        console.log(rooms[index])
         return true
     } else {
         return false

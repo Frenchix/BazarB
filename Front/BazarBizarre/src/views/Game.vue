@@ -92,6 +92,9 @@ async function connectToNamespace() {
     socket.on("newGame", (players) => {
         main.players = players
     })
+    socket.on("pauseGame", () => {
+        main.pauseGame = true
+    })
 }
 
 onMounted(() =>{
