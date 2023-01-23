@@ -56,9 +56,9 @@ router.get('/newNamespace', (req, res) => {
                 io.emit("newUser", getPlayers(namespace));
                 io.emit("messages", {pseudo: `${pseudo}`, reponse: 'good'});
                 setTimeout(() => {
-                    const card = getCard(namespace);
-                    io.emit("getCard", card);
-                }, 2000)
+                    const obj = getCard(namespace);
+                    io.emit("getCard", obj.carteToReturn, obj.nbCartesRestantes);
+                }, 5000)
             }
         });
         socket.on("removeScore", (id, namespace) => {
@@ -77,9 +77,9 @@ router.get('/newNamespace', (req, res) => {
 
 router.get('/getCard', (req, res) => {
     const roomName = req.query.roomName;
-    const card = getCard(roomName);
-    socket.io.of(roomName).emit("getCard", card);
-    res.json(card);
+    const obj = getCard(roomName);
+    socket.io.of(roomName).emit("getCard", obj.carteToReturn, obj.nbCartesRestantes);
+    res.json(obj.carteToReturn);
 })
 
 router.get('/newGame', (req, res) => {

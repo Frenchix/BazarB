@@ -16,14 +16,17 @@ let isHidden = ref(true)
 let i = ref()
 let messages = ref([])
 let endGame = ref(false)
+let nbCartesRestantes = ref(60)
 provide('counter', i)
 provide('getCard', getCard)
 provide('messages', messages)
 provide('endGame', endGame)
 provide('newGame', newGame)
+provide('nbCartesRestantes', nbCartesRestantes)
 
 async function newGame() {
     endGame.value = false
+    nbCartesRestantes.value = 60
     const namespace = route.params.id
     const response = await axios.get(`${import.meta.env.VITE_HOST_API}/newGame?roomName=${namespace}`)
 }
@@ -74,11 +77,12 @@ async function connectToNamespace() {
     socket.on("newUser", (data) => {
         main.players = data
     })
-    socket.on("getCard", (card) => {
+    socket.on("getCard", (card, nb) => {
         for (const item in hidden){
             hidden[item] = true
         }
         messages.value = []
+        nbCartesRestantes.value = nb
         if(card === 'Fin') {
             endGame.value = true
         } else {

@@ -5,6 +5,9 @@ import Cartes from './Cartes.vue';
 import Messages from './Messages.vue';
 import background from '@/assets/background_fantome.jpg'
 import { ref } from 'vue'
+import { inject } from 'vue'
+
+const nbCartesRestantes = inject('nbCartesRestantes')
 
 const url = window.location.href
 let copied = ref(false)
@@ -44,6 +47,9 @@ function copyClipboard(){
                             Donne le lien à un ami
                         </button>
                     </div>
+                </div>
+                <div class="absolute bottom-5 right-14">
+                        Nombre de cartes restantes : {{ nbCartesRestantes }}
                 </div>
             </div>
             <Messages />

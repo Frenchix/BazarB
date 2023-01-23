@@ -25,12 +25,14 @@ function checkWinner(roomName, time){
 
 function getCard(roomName) {
     const index = rooms.findIndex((element) => element.name === roomName);
-    if (rooms[index].cartes.length > 0) {
+    const obj = {};
+    obj.nbCartesRestantes = rooms[index].cartes.length;
+    if (obj.nbCartesRestantes > 0) {
         const carte = randomInt(rooms[index].cartes.length);
-        const carteToReturn = rooms[index].cartes[carte]
+        obj.carteToReturn = rooms[index].cartes[carte]
         rooms[index].cartes.splice(carte, 1);
         rooms[index].timeWinner = 9999999999999999;
-        return carteToReturn;
+        return obj;
     } else {
         return "Fin";
     }

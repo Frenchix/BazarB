@@ -1,9 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { useMainStore } from '../store/main'
-import { inject } from 'vue'
 
-const getCard = inject('getCard')
 const main = useMainStore()
 const { hidden } = main
 
