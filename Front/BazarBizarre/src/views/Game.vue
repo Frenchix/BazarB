@@ -32,8 +32,30 @@ function getRandomInt() {
     const container = document.getElementById('container')
     const maxHeigth = Math.floor((container.offsetHeight * 2) / 12)
     const maxWidth = Math.floor(container.offsetWidth / 12)
+    const coordonnees = []
     const vh = container.offsetHeight - maxHeigth
     const vw = container.offsetWidth - maxWidth
+    for (let i = 0; i < 5; i++){
+        let same = true
+        let a = 0
+        let x = 0
+        let y = 0
+        while (same) {
+            x = Math.floor(Math.random() * vw)
+            y = Math.floor(Math.random() * vh)
+            coordonnees.forEach(element => {
+                if ((x > element[0]) && (x < (element[0] + maxWidth + 1)) && (y > element[1]) && (y < (element[1] + maxHeigth + 1))){
+                    a = 1
+                }
+            })
+            if (a == 0){
+                console.log("coucou")
+                same = false
+            }
+        }
+        coordonnees.push([x, y])
+    }
+    console.log(coordonnees)
     object.cartey = Math.floor(Math.random() * vh);
     object.cartex = Math.floor(Math.random() * vw);
     object.canapey = Math.floor(Math.random() * vh);
