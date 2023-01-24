@@ -46,8 +46,7 @@ function getRandomInt() {
     object.sourisx = Math.floor(Math.random() * vw);
     object.bouteilley = Math.floor(Math.random() * vh);
     object.bouteillex = Math.floor(Math.random() * vw);
-    console.log(object.cartex)
-    console.log(object.cartey)
+
 }
 
 
