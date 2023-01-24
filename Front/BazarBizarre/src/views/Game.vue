@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, provide } from 'vue'
+import { onMounted, ref, provide, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Plateau from '../components/Plateau.vue'
 import { useMainStore } from '../store/main'
@@ -17,12 +17,39 @@ let i = ref()
 let messages = ref([])
 let endGame = ref(false)
 let nbCartesRestantes = ref(60)
+let object = reactive({ sourisx: 0, fantomex: 0, bouteillex: 0, livrex: 0, canapex: 0, cartex: 0, sourisy: 0, fantomey: 0, bouteilley: 0, livrey: 0, canapey: 0, cartey: 0})
+
+provide("object", object)
+provide("random", getRandomInt)
 provide('counter', i)
 provide('getCard', getCard)
 provide('messages', messages)
 provide('endGame', endGame)
 provide('newGame', newGame)
 provide('nbCartesRestantes', nbCartesRestantes)
+
+function getRandomInt() {
+    const container = document.getElementById('container')
+    const maxHeigth = Math.floor((container.offsetHeight * 2) / 12)
+    const maxWidth = Math.floor(container.offsetWidth / 12)
+    const vh = container.offsetHeight - maxHeigth
+    const vw = container.offsetWidth - maxWidth
+    object.cartey = Math.floor(Math.random() * vh);
+    object.cartex = Math.floor(Math.random() * vw);
+    object.canapey = Math.floor(Math.random() * vh);
+    object.canapex = Math.floor(Math.random() * vw);
+    object.fantomey = Math.floor(Math.random() * vh);
+    object.fantomex = Math.floor(Math.random() * vw);
+    object.livrey = Math.floor(Math.random() * vh);
+    object.livrex = Math.floor(Math.random() * vw);
+    object.sourisy = Math.floor(Math.random() * vh);
+    object.sourisx = Math.floor(Math.random() * vw);
+    object.bouteilley = Math.floor(Math.random() * vh);
+    object.bouteillex = Math.floor(Math.random() * vw);
+    console.log(object.cartex)
+    console.log(object.cartey)
+}
+
 
 async function newGame() {
     endGame.value = false

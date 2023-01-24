@@ -19,8 +19,9 @@ export const useMainStore = defineStore('main', () => {
       isHiddensourisBad: true
     })
     const isAdmin = false
+    const mode = ref('classique')
 
-    return { players, socket, goodAnswer, pauseGame, hidden, isAdmin }
+    return { players, socket, goodAnswer, pauseGame, hidden, isAdmin, mode }
   })
 
 const store = createPinia()
