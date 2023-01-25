@@ -23,7 +23,7 @@ function changeMode(){
         <div class="text-center border-b py-2">Messages</div>
         <div class="flex justify-center" v-for="item in messages">
             <div class="ml-2">
-                {{ item.pseudo }} - <span v-if="item.reponse === 'good'" class="text-green-600">Bonne réponse!</span><span v-else class="text-red-600">Mauvaise réponse!</span>
+                {{ item.pseudo }} - <span v-if="item.reponse === 'good'" class="text-green-600">Bonne réponse! ({{ main.goodAnswer }})</span><span v-else class="text-red-600">Mauvaise réponse!</span>
             </div>
         </div>
         <div v-if="main.isAdmin" class="absolute bottom-0 w-full">
