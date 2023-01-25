@@ -66,6 +66,9 @@ router.get('/newNamespace', (req, res) => {
             io.emit("newUser", getPlayers(namespace));
             io.emit("messages", {pseudo: `${pseudo}`, reponse: 'bad'});
         })
+        socket.on("changeMode", (mode) => {
+            io.emit("changeMode", mode);
+        })
     });
     res.send(`${namespace}`);
 });

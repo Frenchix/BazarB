@@ -30,45 +30,43 @@ provide('nbCartesRestantes', nbCartesRestantes)
 
 function getRandomInt() {
     const container = document.getElementById('container')
+    container.style.setProperty('--cursorH', 0 + 'em')
     const maxHeigth = Math.floor((container.offsetHeight * 2) / 12)
     const maxWidth = Math.floor(container.offsetWidth / 12)
     const coordonnees = []
     const vh = container.offsetHeight - maxHeigth
     const vw = container.offsetWidth - maxWidth
-    for (let i = 0; i < 5; i++){
+    for (let i = 0; i < 6; i++){
         let same = true
-        let a = 0
         let x = 0
         let y = 0
         while (same) {
+            let a = 0
             x = Math.floor(Math.random() * vw)
             y = Math.floor(Math.random() * vh)
             coordonnees.forEach(element => {
-                if ((x > element[0]) && (x < (element[0] + maxWidth + 1)) && (y > element[1]) && (y < (element[1] + maxHeigth + 1))){
+                if ((x > (element[0] - maxWidth)) && (x < (element[0] + maxWidth + 1)) && (y > (element[1] - maxHeigth)) && (y < (element[1] + maxHeigth + 1))){
                     a = 1
                 }
             })
             if (a == 0){
-                console.log("coucou")
                 same = false
             }
         }
         coordonnees.push([x, y])
     }
-    console.log(coordonnees)
-    object.cartey = Math.floor(Math.random() * vh);
-    object.cartex = Math.floor(Math.random() * vw);
-    object.canapey = Math.floor(Math.random() * vh);
-    object.canapex = Math.floor(Math.random() * vw);
-    object.fantomey = Math.floor(Math.random() * vh);
-    object.fantomex = Math.floor(Math.random() * vw);
-    object.livrey = Math.floor(Math.random() * vh);
-    object.livrex = Math.floor(Math.random() * vw);
-    object.sourisy = Math.floor(Math.random() * vh);
-    object.sourisx = Math.floor(Math.random() * vw);
-    object.bouteilley = Math.floor(Math.random() * vh);
-    object.bouteillex = Math.floor(Math.random() * vw);
-
+    object.cartey = coordonnees[0][1]
+    object.cartex = coordonnees[0][0]
+    object.canapey = coordonnees[1][1]
+    object.canapex = coordonnees[1][0]
+    object.fantomey = coordonnees[2][1]
+    object.fantomex = coordonnees[2][0]
+    object.livrey = coordonnees[3][1]
+    object.livrex = coordonnees[3][0]
+    object.sourisy = coordonnees[4][1]
+    object.sourisx = coordonnees[4][0]
+    object.bouteilley = coordonnees[5][1]
+    object.bouteillex = coordonnees[5][0]
 }
 
 
@@ -80,10 +78,18 @@ async function newGame() {
 }
 
 function compteARebourd(card){
+    if (main.mode == 'hardcore'){
+        const container = document.getElementById('container')
+        container.style.setProperty('--dark', 1)
+    }
     i.value = 3
     const interval = setInterval(() => {
         i.value--
         if (i.value === 0) {
+            if(main.mode == 'hardcore'){
+                const container = document.getElementById('container')
+                container.style.setProperty('--cursorH', 5 + 'em')
+            }
             clearInterval(interval)
             i.value = card
             main.pauseGame = false
@@ -126,6 +132,9 @@ async function connectToNamespace() {
         main.players = data
     })
     socket.on("getCard", (card, nb) => {
+        if (main.mode == 'hardcore'){
+            getRandomInt()
+        }
         for (const item in hidden){
             hidden[item] = true
         }
@@ -146,6 +155,13 @@ async function connectToNamespace() {
     })
     socket.on("pauseGame", () => {
         main.pauseGame = true
+        if (main.mode == 'hardcore'){
+            const container = document.getElementById('container')
+            container.style.setProperty('--dark', 0)
+        }
+    })
+    socket.on("changeMode", (mode) => {
+        main.mode = mode
     })
 }
 

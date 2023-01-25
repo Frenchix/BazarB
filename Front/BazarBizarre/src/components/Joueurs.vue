@@ -3,11 +3,7 @@ import { useMainStore } from '../store/main';
 import { inject } from 'vue';
 
 const main = useMainStore()
-const randomInt = inject("random")
-
-function getCard(){
-   randomInt()
-}
+const getCard = inject('getCard')
 
 </script>
 

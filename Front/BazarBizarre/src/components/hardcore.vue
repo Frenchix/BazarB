@@ -1,7 +1,41 @@
 <script setup>
 import { onMounted, inject } from 'vue';
+import { useRoute } from 'vue-router'
+import { useMainStore } from '../store/main'
 
 const object = inject('object')
+const counter = inject('counter')
+
+const main = useMainStore()
+const { hidden } = main
+
+const route = useRoute()
+
+function clickOnObject(event) {
+    if (event.srcElement.farthestViewportElement.id == main.goodAnswer) {
+        hidden[`isHidden${event.srcElement.farthestViewportElement.id}Good`] = false
+        main.pauseGame = true;
+        addScore()
+        // setTimeout(() => getCard(), 2000)
+    } else {
+        removeScore()
+        main.pauseGame = true;
+        hidden[`isHidden${event.srcElement.farthestViewportElement.id}Bad`] = false
+    }
+}
+
+function addScore() {
+    const namespace = route.params.id
+    const socket = main.socket
+    socket.emit("addScore", localStorage.getItem('id'), namespace, new Date().getTime())
+}
+
+function removeScore() {
+    const namespace = route.params.id
+    const socket = main.socket
+    socket.emit("removeScore", localStorage.getItem('id'), namespace)
+}
+
 let offsetLeft = 0
 let offsetTop = 0
 
@@ -14,18 +48,12 @@ function update(e){
   document.getElementById('container').style.setProperty('--cursorY', (y - offsetTop) + 'px')
 }
 
-function clickOnObject(e){
-    console.log(e)
-}
-
 onMounted(() => {
     const container = document.getElementById('container')
+    container.style.setProperty('--cursorH', 5 + 'em')
+    container.style.setProperty('--dark', 1)
     offsetTop = container.offsetTop
     offsetLeft = container.offsetLeft
-    const heigthDiff = container.offsetHeight
-    const widthDiff =container.offsetWidth
-    console.log(widthDiff)
-    console.log(window.innerWidth)
     container.addEventListener('mousemove',update)
     
 
@@ -43,10 +71,16 @@ onMounted(() => {
 
 <template>
     <div id="container" class="w-full h-full relative">
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.cartey + 'px', left: object.cartex + 'px'}">
-            <img class="max-w-full max-h-full" :src="'1.jpg'" alt="">
+        <div v-if="counter >= 0" class="absolute z-10 text-white top-1/3 left-1/2 text-9xl">
+            {{ counter }}
         </div>
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.fantomey + 'px', left: object.fantomex + 'px'}">
+        <div class="absolute w-1/12 h-1/6" :style="{top : object.cartey + 'px', left: object.cartex + 'px'}">
+            <div v-if="counter >= 0">
+                {{ counter }}
+            </div>
+            <img v-else class="max-w-full max-h-full" :src="`${counter}`" alt="">
+        </div>
+        <div class="absolute w-1/12 h-1/6" :class="{ 'pointer-events-none': main.pauseGame }" :style="{top : object.fantomey + 'px', left: object.fantomex + 'px'}">
             <svg @click="clickOnObject"
                 class="w-full h-full"
         version="1.0"
@@ -82,8 +116,17 @@ onMounted(() => {
             id="path260"
             transform="scale(0.75)" />
             </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenfantomeGood}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+            </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenfantomeBad}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
         </div>
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.canapey + 'px', left: object.canapex + 'px'}">
+        <div class="absolute w-1/12 h-1/6" :class="{ 'pointer-events-none': main.pauseGame }" :style="{top : object.canapey + 'px', left: object.canapex + 'px'}">
             <svg class="w-full h-full" version="1.1" id="canape" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                  viewBox="0 0 58 58" xml:space="preserve">
                 <g @click="clickOnObject">
@@ -113,8 +156,17 @@ onMounted(() => {
                 <path style="fill:#6C2027;" d="M3,33.344h1.984c0.553,0,1-0.448,1-1s-0.447-1-1-1H3V33.344z"/>
                 </g>     
             </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddencanapeGood}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+            </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddencanapeBad}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
         </div>
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.livrey + 'px', left: object.livrex + 'px'}">
+        <div class="absolute w-1/12 h-1/6" :class="{ 'pointer-events-none': main.pauseGame }" :style="{top : object.livrey + 'px', left: object.livrex + 'px'}">
             <svg
             class="w-full h-full" 
             viewBox="0 0 113.38582 106.29921"
@@ -185,8 +237,17 @@ onMounted(() => {
                     id="path4171"/>
                 </g>
             </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenlivreGood}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+            </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenlivreBad}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
         </div>
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.bouteilley + 'px', left: object.bouteillex + 'px'}">
+        <div class="absolute w-1/12 h-1/6" :class="{ 'pointer-events-none': main.pauseGame }" :style="{top : object.bouteilley + 'px', left: object.bouteillex + 'px'}">
             <svg  viewBox="0 0 209.66 374.06"
                 version="1.1" class="w-full h-full ml-5" id="bouteille">
                 <g @click="clickOnObject"
@@ -276,8 +337,17 @@ onMounted(() => {
                     />
                 </g>
             </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenbouteilleGood}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+            </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddenbouteilleBad}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
         </div>
-        <div class="absolute w-1/12 h-1/6" :style="{top : object.sourisy + 'px', left: object.sourisx + 'px'}">
+        <div class="absolute w-1/12 h-1/6" :class="{ 'pointer-events-none': main.pauseGame }" :style="{top : object.sourisy + 'px', left: object.sourisx + 'px'}">
             <svg class="w-full h-full" viewBox="0 0 330.48 325.95" xmlns="http://www.w3.org/2000/svg" id="souris">
                 <g @click="clickOnObject">
                     <g fill-rule="evenodd" stroke-width="4">
@@ -321,6 +391,15 @@ onMounted(() => {
                     </g>
                 </g>
             </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddensourisGood}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+            </svg>
+            <svg version="1.1" class="h-10 absolute top-[-15px] right-[-15px]" :class="{hidden: hidden.isHiddensourisBad}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
         </div>
         
     </div>
@@ -328,7 +407,7 @@ onMounted(() => {
 
 <style>
 #container {
-/* cursor: none; */
+cursor: none;
   --cursorX: 50vw;
   --cursorY: 50vh;
 }
@@ -339,17 +418,11 @@ onMounted(() => {
   position: absolute;
   pointer-events: none;
   background: radial-gradient(
-    circle 5em at var(--cursorX) var(--cursorY),
+    circle calc(var(--cursorH) + 0em) at var(--cursorX) var(--cursorY),
     rgba(0,0,0,0) 10%,
     rgba(0,0,0,.5) 50%,
-    rgba(0,0,0,1) 100%
+    rgba(0,0,0,var(--dark)) 100%
   );
   z-index: 1;
-}
-
-.card {
-  width: 150px;
-  height: 70px;
-  position: absolute;
 }
 </style>

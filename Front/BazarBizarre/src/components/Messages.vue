@@ -12,6 +12,8 @@ function changeMode(){
     } else {
         main.mode = 'classique'
     }
+    const socket = main.socket
+    socket.emit("changeMode", main.mode)
 }
 
 </script>
