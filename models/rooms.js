@@ -14,6 +14,7 @@ function addRoom(name) {
 }
 
 function checkWinner(roomName, time){
+    console.log("time", time)
     const index = rooms.findIndex((element) => element.name === roomName);
     if (time < rooms[index].timeWinner){
         rooms[index].timeWinner = time;
@@ -62,15 +63,25 @@ function removePlayerToRoom(id) {
 }
 
 function addScore(id) {
+    console.log(id);
     const indexPlayer = players.findIndex((element) => element.id === id);
-    players[indexPlayer].score++;
-    return players[indexPlayer].pseudo;
+    if (indexPlayer == -1){
+        return 'Strange'
+    } else {
+        players[indexPlayer].score++;
+        return players[indexPlayer].pseudo;
+    }
 }
 
 function removeScore(id) {
+    console.log(id);
     const indexPlayer = players.findIndex((element) => element.id === id);
-    players[indexPlayer].score--;
-    return players[indexPlayer].pseudo;
+    if (indexPlayer == -1){
+        return 'Strange'
+    } else {
+        players[indexPlayer].score--;
+        return players[indexPlayer].pseudo;
+    }
 }
 
 function getPlayers(roomName) {
