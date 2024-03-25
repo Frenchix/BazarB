@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo $serviceAccountKey | base64 -d > ./serviceAccountKey.json
+echo $serviceAccountKey > ./serviceAccountKey.json
 # Start default script for NodeJS apps
 npm start
